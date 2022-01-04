@@ -46,7 +46,7 @@ public func export(deviceSelection: String, deleteExistingFiles: Bool) {
         clearProgressBar()
         
         appendOutput(text: "Export der Swinsian Playlist-Struktur gestartet...\n")
-        appendOutput(text: "Zielplattform: \(deviceSelection)\n")
+        appendOutput(text: "Zielplattform: \(targetDev.devLabel)\n")
         
         // check, of target playlist directory exists / is available
         let trgtFolder = (targetDev.plsSubfolder != "") ? targetDev.plsUrl.appendingPathComponent(targetDev.plsSubfolder) : targetDev.plsUrl

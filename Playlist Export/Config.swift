@@ -18,8 +18,20 @@ var targetDev = Config.Mucke
 public enum Config: String, CaseIterable, Identifiable {
     case Mucke
     case RPiCar
+    case Local
     
     public var id: Config { self }
+    
+    public var devLabel: (_: String) {
+        switch self {
+        case .Mucke:
+            return ("Mucke")
+        case .RPiCar:
+            return ("RPiCar")
+        case .Local:
+            return ("Lokal/Fenix")
+        }
+    }
     
     // path to Swinsian SQLite3-DB
     static let dbPath = "/Users/georg/Library/Application Support/Swinsian/Library.sqlite"
@@ -37,6 +49,8 @@ public enum Config: String, CaseIterable, Identifiable {
             return (1)
         case .RPiCar:
             return (121)
+        case .Local:
+            return (121)
         }
     }
     
@@ -51,7 +65,7 @@ public enum Config: String, CaseIterable, Identifiable {
                 // musicPathOnServer
                 "/media/Music"
             )
-                
+            
         case .RPiCar:
             return (
                 // plsPath (location of playlist-directory)
@@ -60,6 +74,16 @@ public enum Config: String, CaseIterable, Identifiable {
                 "/media/usbstick/Music/Playlists",
                 // musicPathOnServer
                 "/media/usbstick/Music"
+            )
+            
+        case .Local:
+            return (
+                // plsPath (location of playlist-directory)
+                "/Users/georg/Music/Playlists",
+                // plsPathOnServer
+                "/Users/georg/Music/Playlists",
+                // musicPathOnServer
+                "/Volumes/Mucke/Music"
             )
         }
     }
@@ -70,6 +94,8 @@ public enum Config: String, CaseIterable, Identifiable {
         case .Mucke:
             return ("")
         case .RPiCar:
+            return ("")
+        case .Local:
             return ("")
         }
     }
