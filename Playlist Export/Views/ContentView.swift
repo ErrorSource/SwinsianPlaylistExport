@@ -68,7 +68,7 @@ struct ContentView: View {
                         VStack(alignment: .trailing, spacing: 0) {
                             Picker("Zielplattform:", selection: self.$deviceSelection) {
                                 ForEach(Config.allCases, content: { device in
-                                    Text(device.rawValue).tag(device.rawValue)
+                                    Text(device.devLabel).tag(device.rawValue)
                                 })
                             }
                         }
