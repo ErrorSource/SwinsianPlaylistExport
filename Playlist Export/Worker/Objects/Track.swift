@@ -8,13 +8,17 @@
 import Foundation
 
 struct TrackObject: Decodable, Hashable {
-    
+    track_id, title, artist, album, tracknumber, discnumber, length, dateadded, path
     var id: Int!
     var title: String?
     var artist: String?
     var album: String?
+    var trackNumber: Int?
+    var disc: Int?
     var length: Int?
+    var dateAdded: Float?
     var path: String?
+    var dateModified: Float?
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

@@ -144,23 +144,97 @@ func createPlaylistContent(nodePlayist: PlaylistObject) -> String {
     // get tracks to playlist
     let nodeTracks = objects.playlistTracks.filter({ $0.playlistId == nodePlayist.id })
     if (nodeTracks.first != nil) {
+        var sortedTracks: [TrackObject] = []
+        // first push all according tracks into array to sort them later (tindex == default sorting)
         for (plTrack) in nodeTracks.sorted(by: \.tindex) {
             // get track-object
             let track = objects.tracks.filter({ $0.id == plTrack.trackId }).first!
-            
-            let trackLength = (track.length != nil) ? String(describing: Int(track.length!)) : "0"
-            let trackArtist = (track.artist != nil) ? String(describing: track.artist!) : ""
-            let trackTitle  = (track.title  != nil) ? String(describing: track.title!) : ""
+            sortedTracks.append(track)
+        }
+        
+        // sort array, if sortkey given
+        if let sortKey = nodePlayist.sortkey {
+            if (sortKey != sortBy.tindex) {
+                sortedTracks = sortTracksByKey(tracks: sortedTracks, sortKey: sortKey, ascending: nodePlayist.ascending!)
+            }
+        }
+        
+        for (plTrack) in sortedTracks {
+            let trackLength = (plTrack.length != nil) ? String(describing: Int(plTrack.length!)) : "0"
+            let trackArtist = (plTrack.artist != nil) ? String(describing: plTrack.artist!) : ""
+            let trackTitle  = (plTrack.title  != nil) ? String(describing: plTrack.title!) : ""
             // precomposedStringWithCompatibilityMapping: convert UTF-8-MAC encoding to UTF-8 (standard) (UTF-8 NFD to UTF-8 NFC)
             // (see https://stackoverflow.com/questions/68173237/normalizing-composing-and-decomposing-utf8-strings-in-swift)
             // sanitized: some characters in filenames are not "optimal" → replace them
-            let trackPath   = (track.path   != nil) ? String(describing: track.path!).replacingOccurrences(of: Config.musicPathLocal, with: targetDev.paths.musicPathOnServer).nrmlzd() : ""
+            let trackPath   = (plTrack.path   != nil) ? String(describing: plTrack.path!).replacingOccurrences(of: Config.musicPathLocal, with: targetDev.paths.musicPathOnServer).nrmlzd() : ""
             plContent = plContent + "#EXTINF:\(trackLength), \(trackArtist) - \(trackTitle)\n"
             plContent = plContent + "\(trackPath)\n"
         }
     }
     
     return plContent
+}
+
+func sortTracksByKey(tracks: [TrackObject], sortKey: String, ascending: Bool) -> [TrackObject] {
+    switch sortKey {
+    case sortBy.artist:
+        return tracks.sorted(by: {
+            guard let sortKey0_1 = $0.artist, let sortKey1_1 = $1.artist, let sortKey0_2 = $0.disc, let sortKey1_2 = $1.disc, let sortKey0_3 = $0.trackNumber, let sortKey1_3 = $1.trackNumber else { return false }
+            if (sortKey0_1 != sortKey1_1) {
+                return (ascending) ? sortKey0_1 < sortKey1_1 : sortKey0_1 > sortKey1_1
+            } else {
+                if (sortKey0_2 != sortKey1_2) {
+                    return sortKey0_2 < sortKey1_2
+                } else {
+                    return sortKey0_3 < sortKey1_3
+                }
+            }
+        })
+    case sortBy.album:
+        return tracks.sorted(by: {
+            guard let sortKey0_1 = $0.album, let sortKey1_1 = $1.album, let sortKey0_2 = $0.disc, let sortKey1_2 = $1.disc, let sortKey0_3 = $0.trackNumber, let sortKey1_3 = $1.trackNumber else { return false }
+            if (sortKey0_1 != sortKey1_1) {
+                return (ascending) ? sortKey0_1 < sortKey1_1 : sortKey0_1 > sortKey1_1
+            } else {
+                if (sortKey0_2 != sortKey1_2) {
+                    return sortKey0_2 < sortKey1_2
+                } else {
+                    return sortKey0_3 < sortKey1_3
+                }
+            }
+        })
+    case sortBy.title:
+        return tracks.sorted(by: {
+            guard let sortKey0 = $0.title, let sortKey1 = $1.title else { return false }
+            return (ascending) ? sortKey0 < sortKey1 : sortKey0 > sortKey1
+        })
+    case sortBy.trackNumber:
+        return tracks.sorted(by: {
+            guard let sortKey0 = $0.trackNumber, let sortKey1 = $1.trackNumber else { return false }
+            return (ascending) ? sortKey0 < sortKey1 : sortKey0 > sortKey1
+        })
+    case sortBy.disc:
+        return tracks.sorted(by: {
+            guard let sortKey0_1 = $0.disc, let sortKey1_1 = $1.disc, let sortKey0_2 = $0.trackNumber, let sortKey1_2 = $1.trackNumber else { return false }
+            if (sortKey0_1 != sortKey1_1) {
+                return (ascending) ? sortKey0_1 < sortKey1_1 : sortKey0_1 > sortKey1_1
+            } else {
+                return sortKey0_2 < sortKey1_2
+            }
+        })
+    case sortBy.dateAdded:
+        return tracks.sorted(by: {
+            guard let sortKey0 = $0.dateAdded, let sortKey1 = $1.dateAdded else { return false }
+            return (ascending) ? sortKey0 < sortKey1 : sortKey0 > sortKey1
+        })
+    case sortBy.dateModified:
+        return tracks.sorted(by: {
+            guard let sortKey0 = $0.dateModified, let sortKey1 = $1.dateModified else { return false }
+            return (ascending) ? sortKey0 < sortKey1 : sortKey0 > sortKey1
+        })
+    default:
+        return tracks
+    }
 }
 
 extension String {
