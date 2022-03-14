@@ -8,7 +8,7 @@
 import Foundation
 
 struct TrackObject: Decodable, Hashable {
-    track_id, title, artist, album, tracknumber, discnumber, length, dateadded, path
+    
     var id: Int!
     var title: String?
     var artist: String?
