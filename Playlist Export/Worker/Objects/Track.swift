@@ -13,8 +13,12 @@ struct TrackObject: Decodable, Hashable {
     var title: String?
     var artist: String?
     var album: String?
+    var trackNumber: Int?
+    var disc: Int?
     var length: Int?
+    var dateAdded: Float?
     var path: String?
+    var dateModified: Float?
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

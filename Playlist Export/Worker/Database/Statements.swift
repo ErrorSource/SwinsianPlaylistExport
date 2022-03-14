@@ -190,7 +190,7 @@ func readTracks() -> [TrackObject] {
     var trackObjects: [TrackObject] = []
     var statement: OpaquePointer? = nil
     
-    let sqlStatement = "SELECT track_id, title, artist, album, length, path FROM track"
+    let sqlStatement = "SELECT track_id, title, artist, album, tracknumber, discnumber, length, dateadded, path, datemodified FROM track"
     
     if sqlite3_prepare_v2(objects.db, sqlStatement, -1, &statement, nil) != SQLITE_OK {
         let errmsg = String(cString: sqlite3_errmsg(objects.db)!)
@@ -216,13 +216,21 @@ func readTracks() -> [TrackObject] {
             let tStr = String(cString: cString)
             track.album = tStr
         }
+        // *** tracknumber
+        track.trackNumber = Int(exactly: sqlite3_column_int(statement, 4))
+        // *** discnumber
+        track.disc = Int(exactly: sqlite3_column_int(statement, 5))
         // *** length
-        track.length = Int(exactly: sqlite3_column_int(statement, 4))
+        track.length = Int(exactly: sqlite3_column_int(statement, 6))
+        // *** dateadded
+        track.dateAdded = Float(sqlite3_column_double(statement, 7))
         // *** path
-        if let cString = sqlite3_column_text(statement, 5) {
+        if let cString = sqlite3_column_text(statement, 8) {
             let tStr = String(cString: cString)
             track.path = tStr
         }
+        // *** datemodified
+        track.dateModified = Float(sqlite3_column_double(statement, 9))
         
         trackObjects.append(track)
     }

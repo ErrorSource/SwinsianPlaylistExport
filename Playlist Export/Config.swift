@@ -37,8 +37,8 @@ public enum Config: String, CaseIterable, Identifiable {
     static let dbPath = "/Users/georg/Library/Application Support/Swinsian/Library.sqlite"
     static let dbUrl  = URL(fileURLWithPath: Config.dbPath)
     
-    // "local" path to music library on hades; "local" means SMB-path to it (/Volumes/...)
-    static let musicPathLocal = "/Volumes/Mucke/Music"
+    // "local" path to music library on hades; "local" means SMB-path to it (/Volumes/... or /System/Volumes/Data/mount)
+    static let musicPathLocal = "/System/Volumes/Data/mount/Mucke/Music"
     
     // playlist-folder ID to begin with
     // (set to 0, if ALL folders should be processed)
@@ -59,7 +59,7 @@ public enum Config: String, CaseIterable, Identifiable {
         case .Mucke:
             return (
                 // plsPath (location of playlist-directory)
-                "/Volumes/Mucke/Playlists",
+                "/System/Volumes/Data/mount/Mucke/Playlists",
                 // plsPathOnServer
                 "/media/Playlists",
                 // musicPathOnServer
@@ -69,7 +69,7 @@ public enum Config: String, CaseIterable, Identifiable {
         case .RPiCar:
             return (
                 // plsPath (location of playlist-directory)
-                "/Volumes/Mucke/RPiCar/Playlists",
+                "/System/Volumes/Data/mount/Mucke/RPiCar/Playlists",
                 // plsPathOnServer
                 "/media/usbstick/Music/Playlists",
                 // musicPathOnServer
@@ -83,7 +83,7 @@ public enum Config: String, CaseIterable, Identifiable {
                 // plsPathOnServer
                 "/Users/georg/Music/Playlists",
                 // musicPathOnServer
-                "/Volumes/Mucke/Music"
+                "/System/Volumes/Data/mount/Mucke/Music"
             )
         }
     }
