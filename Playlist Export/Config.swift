@@ -18,6 +18,8 @@ var targetDev = Config.Mucke
 public enum Config: String, CaseIterable, Identifiable {
     case Mucke
     case RPiCar
+    case iPhone
+    case Fenix
     case Local
     
     public var id: Config { self }
@@ -28,8 +30,12 @@ public enum Config: String, CaseIterable, Identifiable {
             return ("Mucke")
         case .RPiCar:
             return ("RPiCar")
+       case .iPhone:
+            return ("iPhone")
+        case .Fenix:
+            return ("Fenix")
         case .Local:
-            return ("Lokal/Fenix")
+            return ("Lokal")
         }
     }
     
@@ -49,6 +55,10 @@ public enum Config: String, CaseIterable, Identifiable {
             return (1)
         case .RPiCar:
             return (121)
+        case .iPhone:
+            return (257)
+        case .Fenix:
+            return (244)
         case .Local:
             return (121)
         }
@@ -75,6 +85,26 @@ public enum Config: String, CaseIterable, Identifiable {
                 // musicPathOnServer
                 "/media/usbstick/Music"
             )
+        
+        case .iPhone:
+            return (
+                // plsPath (location of playlist-directory)
+                "/System/Volumes/Data/mount/Mucke/.PlexPlaylists",
+                // plsPathOnServer
+                "/Volumes/Media/Mucke/PlexPlaylists",
+                // musicPathOnServer
+                "/Volumes/Media/Mucke/Musik"
+           )
+            
+        case .Fenix:
+            return (
+                // plsPath (location of playlist-directory)
+                "/Users/georg/Music/Fenix",
+                // plsPathOnServer
+                "/Users/georg/Music/Fenix",
+                // musicPathOnServer
+                "(not needed here)"
+            )
             
         case .Local:
             return (
@@ -94,6 +124,10 @@ public enum Config: String, CaseIterable, Identifiable {
         case .Mucke:
             return ("")
         case .RPiCar:
+            return ("")
+        case .iPhone:
+            return ("")
+        case .Fenix:
             return ("")
         case .Local:
             return ("")

@@ -24,6 +24,7 @@ struct ContentView: View {
     
     @State var deviceSelection: String = targetDev.id.rawValue
     @State var deleteExistingFiles: Bool = true
+    @State var copyMusicFiles: Bool = false
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 0) {
@@ -66,10 +67,24 @@ struct ContentView: View {
                         Spacer()
                         
                         VStack(alignment: .trailing, spacing: 0) {
+                            Toggle("Musik-Dateien kopieren", isOn: $copyMusicFiles)
+                                   .padding()
+                                   .disabled(deviceSelection != Config.Fenix.devLabel)
+                        }
+                        .frame(minWidth: 100, idealWidth: 200, maxWidth: 200, alignment: .trailing)
+                        .frame(height: 16)
+                        
+                        Spacer()
+                        
+                        VStack(alignment: .trailing, spacing: 0) {
                             Picker("Zielplattform:", selection: self.$deviceSelection) {
                                 ForEach(Config.allCases, content: { device in
                                     Text(device.devLabel).tag(device.rawValue)
                                 })
+                            }
+                            .onChange(of: deviceSelection) { device in
+                                deleteExistingFiles = (device == Config.Fenix.devLabel) ? false : true
+                                copyMusicFiles = (device == Config.Fenix.devLabel) ? true : false
                             }
                         }
                         .frame(minWidth: 100, idealWidth: 200, maxWidth: 200, alignment: .trailing)
@@ -122,7 +137,7 @@ struct ContentView: View {
             
             HStack {
                 Button(action: {
-                    export(deviceSelection: self.deviceSelection, deleteExistingFiles: self.deleteExistingFiles)
+                    export(deviceSelection: self.deviceSelection, deleteExistingFiles: self.deleteExistingFiles, copyMusicFiles: self.copyMusicFiles)
                 }) {
                     Text("Export")
                         .frame(maxWidth: 100, maxHeight: 28)

@@ -23,13 +23,15 @@ public class Objects {
     var fldToProcess: Double = 0.0
     var plsToProcess: Double = 1.0 // !
     var plsProcessed: Double = 0.0
+    
+    var copyMusicFiles: Bool = false
 }
 
 // intialize objects as public
 public let objects = Objects()
 
 // *** main function ***
-public func export(deviceSelection: String, deleteExistingFiles: Bool) {
+public func export(deviceSelection: String, deleteExistingFiles: Bool, copyMusicFiles: Bool) {
     let semaphore = DispatchSemaphore(value:0)
     let queue = DispatchQueue(label:"ExportQueue", target: DispatchQueue.global(qos: .userInitiated))
     queue.async {
@@ -41,6 +43,7 @@ public func export(deviceSelection: String, deleteExistingFiles: Bool) {
         }
         
         isProcessing(state: true)
+        objects.copyMusicFiles = copyMusicFiles
         
         clearOutput()
         clearProgressBar()
